@@ -3133,20 +3133,20 @@ static RValue builtinWindowGetHeight(VMContext* ctx, MAYBE_UNUSED RValue* args, 
     return RValue_makeReal((GMLReal) ctx->dataWin->gen8.defaultWindowHeight);
 }
 
-static RValue builtinWindowSetCaption(VMContext* ctx, MAYBE_UNUSED RValue* args, MAYBE_UNUSED int32_t argCount) {
-    #ifndef PLATFORM_PS2
+static RValue builtinWindowSetCaption(VMContext* ctx, RValue* args, int32_t argCount) {
+    if (1 > argCount) return RValue_makeUndefined();
+
     char* val = RValue_toString(args[0]);
     char windowTitle[256];
     snprintf(windowTitle, sizeof(windowTitle), "Butterscotch - %s", val);
 
     Runner* runner = (Runner*) ctx->runner;
-    if (runner->setWindowTitle && runner->nativeWindow) {
+    if (runner != nullptr && runner->setWindowTitle && runner->nativeWindow) {
         runner->setWindowTitle(runner->nativeWindow, windowTitle);
         printf("GL: Window title set to: %s\n", val);
     }
-    
+
     free(val);
-    #endif
     return RValue_makeUndefined();
 }
 
