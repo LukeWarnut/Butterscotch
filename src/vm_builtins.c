@@ -3122,6 +3122,9 @@ STUB_RETURN_ZERO(joystick_check_button)
 
 // Window stubs
 STUB_RETURN_ZERO(window_get_fullscreen)
+#ifdef PLATFORM_PS2
+STUB_RETURN_UNDEFINED(window_set_caption)
+#endif
 STUB_RETURN_UNDEFINED(window_set_fullscreen)
 STUB_RETURN_UNDEFINED(window_set_size)
 STUB_RETURN_UNDEFINED(window_center)
