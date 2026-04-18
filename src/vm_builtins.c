@@ -3122,6 +3122,9 @@ STUB_RETURN_ZERO(joystick_check_button)
 
 // Window stubs
 STUB_RETURN_ZERO(window_get_fullscreen)
+#ifdef PLATFORM_PS2
+STUB_RETURN_UNDEFINED(window_set_caption)
+#endif
 STUB_RETURN_UNDEFINED(window_set_fullscreen)
 STUB_RETURN_UNDEFINED(window_set_size)
 STUB_RETURN_UNDEFINED(window_center)
@@ -3134,16 +3137,16 @@ static RValue builtinWindowGetHeight(VMContext* ctx, MAYBE_UNUSED RValue* args, 
 }
 
 static RValue builtinWindowSetCaption(VMContext* ctx, MAYBE_UNUSED RValue* args, MAYBE_UNUSED int32_t argCount) {
-    char* val = RValue_toString(args[0]);
-    char windowTitle[256];
-    snprintf(windowTitle, sizeof(windowTitle), "Butterscotch - %s", val);
+    if (1 > argCount) return RValue_makeUndefined();
 
+    char* val = RValue_toString(args[0]);
     Runner* runner = (Runner*) ctx->runner;
     if (runner->setWindowTitle && runner->nativeWindow) {
+        char windowTitle[256];
+        snprintf(windowTitle, sizeof(windowTitle), "Butterscotch - %s", val);
         runner->setWindowTitle(runner->nativeWindow, windowTitle);
         printf("GL: Window title set to: %s\n", val);
     }
-    
     free(val);
     return RValue_makeUndefined();
 }
